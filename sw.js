@@ -1,4 +1,4 @@
-const CACHE_NAME = 'education42-v1';
+const CACHE_NAME = 'education42-v2';
 const ASSETS = [
   './',
   './index.html',
@@ -24,8 +24,6 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   event.respondWith(
-    caches.match(event.request).then((cachedResponse) => {
-      return cachedResponse || fetch(event.request);
-    })
+    fetch(event.request).catch(() => caches.match(event.request))
   );
 });

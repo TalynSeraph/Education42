@@ -1,4 +1,4 @@
-// --- FUNCTION DEFINITIONS (Defined first to prevent initialization crashes) ---
+let currentSelectedDay = "Monday";
 
 function generateRemainingLessons() {
   const generated = [];
@@ -77,8 +77,6 @@ function generateRemainingLessons() {
   return generated;
 }
 
-// --- DATA INITIALIZATION ---
-
 const INITIAL_CURRICULUM = {
   subjects: [
     { id: "eng", name: "GCSE English Literature & Language", description: "AQA 8702/8700 - Macbeth, Jekyll & Hyde, Animal Farm, Power & Conflict", weeks: 36 },
@@ -112,10 +110,7 @@ const INITIAL_CURRICULUM = {
 
 let appData = { curriculum: null, diary: {} };
 
-// --- CORE APP LIFECYCLE ---
-
 function initApp() {
-  console.log("Initializing GCSE Tracker...");
   try {
     const stored = localStorage.getItem("homeschool_gcse_tracker");
     if (stored) {
@@ -123,7 +118,6 @@ function initApp() {
       if (parsed && parsed.curriculum && Array.isArray(parsed.curriculum.lessons) && parsed.curriculum.lessons.length > 0) {
         appData = parsed;
       } else {
-        console.warn("Local storage missing required lessons. Re-seeding defaults.");
         appData.curriculum = JSON.parse(JSON.stringify(INITIAL_CURRICULUM));
         saveState();
       }
@@ -131,26 +125,23 @@ function initApp() {
       appData.curriculum = JSON.parse(JSON.stringify(INITIAL_CURRICULUM));
       saveState();
     }
-  } catch (err) {
-    console.error("Corrupted local storage encountered. Resetting to defaults.", err);
+  } catch (e) {
     appData.curriculum = JSON.parse(JSON.stringify(INITIAL_CURRICULUM));
     saveState();
   }
 
-  // Populate Week Select
   const weekSelect = document.getElementById("schedule-week-select");
   if (weekSelect) {
     weekSelect.innerHTML = "";
     for (let i = 1; i <= 36; i++) {
       const opt = document.createElement("option");
       opt.value = i;
-      opt.textContent = `Week ${i}`;
+      opt.textContent = `Wk ${i}`;
       weekSelect.appendChild(opt);
     }
     weekSelect.value = 1;
   }
 
-  // Set initial diary picker date
   const datePicker = document.getElementById("diary-date-picker");
   if (datePicker && !datePicker.value) {
     datePicker.value = new Date().toISOString().split("T")[0];
@@ -160,7 +151,6 @@ function initApp() {
   renderCurriculum();
   renderDiary();
   renderProgress();
-  console.log("GCSE Tracker initialized successfully.");
 }
 
 function saveState() {
@@ -169,7 +159,7 @@ function saveState() {
 }
 
 function resetToDefault() {
-  if (confirm("Reset curriculum back to default timetable and wipe custom changes?")) {
+  if (confirm("Reset curriculum back to default timetable and wipe all progress?")) {
     localStorage.removeItem("homeschool_gcse_tracker");
     appData.curriculum = JSON.parse(JSON.stringify(INITIAL_CURRICULUM));
     appData.diary = {};
@@ -183,11 +173,9 @@ function exportData() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = "education42_gcse_backup.json";
+  a.download = "education42_backup.json";
   a.click();
 }
-
-// --- UI INTERACTIONS & TABS ---
 
 function switchTab(tabId) {
   document.querySelectorAll(".nav-btn").forEach(btn => btn.classList.remove("active"));
@@ -203,60 +191,51 @@ function switchTab(tabId) {
   if (tabId === "diary") renderDiary();
 }
 
-// --- TIMETABLE RENDERING ---
+function switchDay(dayName) {
+  currentSelectedDay = dayName;
+  document.querySelectorAll(".day-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.textContent.trim().toLowerCase().startsWith(dayName.slice(0, 3).toLowerCase()));
+  });
+  renderSchedule();
+}
 
 function renderSchedule() {
-  const selectElem = document.getElementById("schedule-week-select");
-  if (!selectElem) return;
-
-  const weekNum = parseInt(selectElem.value, 10) || 1;
-  const tbody = document.getElementById("schedule-grid-body");
-  if (!tbody) return;
-  tbody.innerHTML = "";
+  const weekNum = parseInt(document.getElementById("schedule-week-select").value, 10) || 1;
+  const container = document.getElementById("mobile-lessons-container");
+  if (!container) return;
+  container.innerHTML = "";
 
   const termLabel = document.getElementById("schedule-term-label");
   if (termLabel) {
-    if (weekNum <= 12) termLabel.textContent = "(Autumn Term)";
-    else if (weekNum <= 24) termLabel.textContent = "(Spring Term)";
-    else termLabel.textContent = "(Summer Term)";
+    if (weekNum <= 12) termLabel.textContent = "Term 1 (Autumn)";
+    else if (weekNum <= 24) termLabel.textContent = "Term 2 (Spring)";
+    else termLabel.textContent = "Term 3 (Summer)";
   }
 
-  const days = ["Monday", "Tuesday", "Wednesday", "Thursday"];
-  const weekLessons = (appData.curriculum && appData.curriculum.lessons)
-    ? appData.curriculum.lessons.filter(l => l.week === weekNum)
+  const lessons = (appData.curriculum && appData.curriculum.lessons)
+    ? appData.curriculum.lessons.filter(l => l.week === weekNum && l.day === currentSelectedDay)
     : [];
 
-  for (let slot = 1; slot <= 4; slot++) {
-    const tr = document.createElement("tr");
-    days.forEach(day => {
-      const td = document.createElement("td");
-      td.className = "schedule-cell";
-      const lesson = weekLessons.find(l => l.day === day && l.slot === slot);
-
-      if (lesson) {
-        const div = document.createElement("div");
-        div.className = `lesson-tag ${lesson.completed ? "completed" : ""}`;
-        div.onclick = () => openLessonModal(lesson.id);
-
-        const sub = document.createElement("div");
-        sub.className = "sub-title";
-        sub.textContent = `${lesson.subject} (L${lesson.slot})`;
-
-        const focus = document.createElement("div");
-        focus.style.fontWeight = "600";
-        focus.textContent = lesson.focus;
-
-        div.appendChild(sub);
-        div.appendChild(focus);
-        td.appendChild(div);
-      }
-      tr.appendChild(td);
-    });
-    tbody.appendChild(tr);
+  if (lessons.length === 0) {
+    container.innerHTML = `<p style="color:var(--text-secondary); text-align:center; padding:20px;">No lessons scheduled for ${currentSelectedDay}.</p>`;
+    return;
   }
-}
 
-// --- MODAL / DETAIL VIEWS ---
+  lessons.sort((a, b) => a.slot - b.slot).forEach(lesson => {
+    const card = document.createElement("div");
+    card.className = `lesson-card ${lesson.completed ? "completed" : ""}`;
+    card.onclick = () => openLessonModal(lesson.id);
+
+    card.innerHTML = `
+      <div class="lesson-card-header">
+        <span class="lesson-tag-sub">Lesson ${lesson.slot} • ${lesson.subject}</span>
+        <span class="badge ${lesson.completed ? "badge-done" : "badge-planned"}">${lesson.completed ? "Done" : "Planned"}</span>
+      </div>
+      <div class="lesson-card-focus">${lesson.focus}</div>
+    `;
+    container.appendChild(card);
+  });
+}
 
 let activeLessonId = null;
 
@@ -265,8 +244,8 @@ function openLessonModal(lessonId) {
   const lesson = appData.curriculum.lessons.find(l => l.id === lessonId);
   if (!lesson) return;
 
-  document.getElementById("modal-subject").textContent = `${lesson.subject} — Week ${lesson.week}, ${lesson.day}`;
-  document.getElementById("modal-focus").textContent = lesson.focus;
+  document.getElementById("modal-subject").textContent = `${lesson.subject} (L${lesson.slot})`;
+  document.getElementById("modal-focus").textContent = `Week ${lesson.week}, ${lesson.day}: ${lesson.focus}`;
   document.getElementById("modal-content").textContent = lesson.teaching || "No lesson breakdown recorded.";
 
   const badge = document.getElementById("modal-status-badge");
@@ -275,13 +254,13 @@ function openLessonModal(lessonId) {
   if (lesson.completed) {
     badge.className = "badge badge-done";
     badge.textContent = "Completed";
-    toggleBtn.textContent = "Mark Incomplete";
-    toggleBtn.className = "btn btn-outline";
+    toggleBtn.textContent = "Mark as Incomplete";
+    toggleBtn.className = "btn btn-outline btn-block";
   } else {
     badge.className = "badge badge-planned";
     badge.textContent = "Planned";
-    toggleBtn.textContent = "Mark Completed";
-    toggleBtn.className = "btn btn-primary";
+    toggleBtn.textContent = "Mark as Completed";
+    toggleBtn.className = "btn btn-primary btn-block";
   }
 
   document.getElementById("lesson-modal").classList.add("open");
@@ -303,18 +282,14 @@ function toggleLessonCompletion() {
   }
 }
 
-// --- DIARY LOGS ---
-
 function renderDiary() {
   const dateInput = document.getElementById("diary-date-picker");
   if (!dateInput) return;
   const date = dateInput.value;
   const entry = appData.diary[date] || { notes: "", extra: "" };
 
-  const notesInput = document.getElementById("diary-notes");
-  const extraInput = document.getElementById("diary-extra");
-  if (notesInput) notesInput.value = entry.notes || "";
-  if (extraInput) extraInput.value = entry.extra || "";
+  document.getElementById("diary-notes").value = entry.notes || "";
+  document.getElementById("diary-extra").value = entry.extra || "";
 
   const hist = document.getElementById("diary-history");
   if (!hist) return;
@@ -327,7 +302,7 @@ function renderDiary() {
   dates.slice(0, 7).forEach(d => {
     const item = appData.diary[d];
     const box = document.createElement("div");
-    box.style = "background:var(--bg-main); padding:10px 14px; border:1px solid var(--border); border-radius:6px; margin-bottom:8px; font-size:0.85rem;";
+    box.style = "background:var(--bg-main); padding:10px 12px; border:1px solid var(--border); border-radius:6px; margin-bottom:8px; font-size:0.85rem;";
     box.innerHTML = `<strong>${d}</strong><br>${item.notes ? item.notes : "<em>No notes</em>"}${item.extra ? `<br><span style="color:var(--accent);">+ Extra: ${item.extra}</span>` : ""}`;
     hist.appendChild(box);
   });
@@ -344,10 +319,8 @@ function saveDiaryEntry() {
   appData.diary[date] = { notes, extra };
   saveState();
   renderDiary();
-  alert("Session logged.");
+  alert("Log saved successfully.");
 }
-
-// --- METRICS & PROGRESS ---
 
 function renderProgress() {
   const container = document.getElementById("progress-summary");
@@ -360,11 +333,11 @@ function renderProgress() {
   const pct = total === 0 ? 0 : Math.round((completed / total) * 100);
 
   const overallCard = document.createElement("div");
-  overallCard.style = "margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid var(--border);";
+  overallCard.style = "margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border);";
   overallCard.innerHTML = `
-    <div style="display:flex; justify-content:space-between; font-weight:700; font-size:1rem;">
-      <span>Total Year 10 GCSE Curriculum</span>
-      <span>${pct}% (${completed}/${total} lessons)</span>
+    <div style="display:flex; justify-content:space-between; font-weight:700; font-size:0.95rem;">
+      <span>Total Year 10 GCSE</span>
+      <span>${pct}% (${completed}/${total})</span>
     </div>
     <div class="progress-bar-wrap">
       <div class="progress-bar-fill" style="width: ${pct}%;"></div>
@@ -379,7 +352,7 @@ function renderProgress() {
     const sPct = sTotal === 0 ? 0 : Math.round((sDone / sTotal) * 100);
 
     const row = document.createElement("div");
-    row.style = "margin-bottom: 16px;";
+    row.style = "margin-bottom: 14px;";
     row.innerHTML = `
       <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:600;">
         <span>${sub.name}</span>
@@ -393,8 +366,6 @@ function renderProgress() {
   });
 }
 
-// --- CURRICULUM REGISTRY ---
-
 function renderCurriculum() {
   const list = document.getElementById("curriculum-list");
   if (!list || !appData.curriculum) return;
@@ -402,21 +373,20 @@ function renderCurriculum() {
 
   appData.curriculum.subjects.forEach(sub => {
     const div = document.createElement("div");
-    div.style = "border:1px solid var(--border); border-radius:6px; padding:12px; margin-bottom:12px; background:var(--bg-main);";
+    div.style = "border:1px solid var(--border); border-radius:6px; padding:10px; margin-bottom:8px; background:var(--bg-main);";
     div.innerHTML = `
       <div style="display:flex; justify-content:space-between; align-items:center;">
         <div>
-          <strong style="font-size:0.95rem;">${sub.name}</strong>
-          <p style="font-size:0.8rem; color:var(--text-secondary);">${sub.description}</p>
+          <strong style="font-size:0.9rem;">${sub.name}</strong>
+          <p style="font-size:0.75rem; color:var(--text-secondary);">${sub.description}</p>
         </div>
-        <span class="badge badge-planned">${sub.weeks} Weeks Planned</span>
+        <span class="badge badge-planned" style="font-size:0.7rem;">${sub.weeks} Wks</span>
       </div>
     `;
     list.appendChild(div);
   });
 }
 
-// Ensure execution triggers safely whether DOM is ready or deferred
 if (document.readyState === "loading") {
   window.addEventListener("DOMContentLoaded", initApp);
 } else {

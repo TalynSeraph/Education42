@@ -1,39 +1,4 @@
-const INITIAL_CURRICULUM = {
-  subjects: [
-    { id: "eng", name: "GCSE English Literature & Language", description: "AQA 8702/8700 - Macbeth, Jekyll & Hyde, Animal Farm, Power & Conflict", weeks: 36 },
-    { id: "maths", name: "GCSE Mathematics Higher", description: "AQA Higher - Number, Algebra, Geometry, Probability, Statistics", weeks: 36 },
-    { id: "bio", name: "GCSE Biology", description: "Cells, Transport, Organisation, Infection, Bioenergetics, Homeostasis, Ecology", weeks: 36 },
-    { id: "chem", name: "GCSE Chemistry", description: "Atomic Structure, Bonding, Quantitative, Reactions, Rates, Organic", weeks: 36 },
-    { id: "phys", name: "GCSE Physics", description: "Energy, Electricity, Particle Model, Radiation, Waves, Space", weeks: 36 },
-    { id: "pshe", name: "PSHE & RSE", description: "Mental Health, Relationships, Safety, Finance, Careers, Becoming an Adult", weeks: 36 },
-    { id: "art", name: "Art & Design", description: "Portfolio Projects: Objects & Identity, Colour & Place, Portraiture, Mixed Media", weeks: 36 }
-  ],
-  lessons: [
-    // --- WEEK 1 SCRIPTED LESSONS ---
-    { id: "w1_mon_eng", week: 1, day: "Monday", slot: 1, subject: "English", focus: "Macbeth foundations: Shakespeare, James I, Divine Right, Great Chain, witchcraft, tragedy, 'Fair is foul'", teaching: "0-7m: Retrieval (Divine Right, Regicide, Tragedy)\n7-18m: Reading Oxford School Shakespeare pp. 115-116, Act 1 Sc 1\n18-28m: Paradox, moral disorder, supernatural storm\n28-39m: 5-point event map + copy anchor quote: 'Fair is foul, and foul is fair'\n39-45m: Retell reading in 5 accurate points.", completed: false },
-    { id: "w1_mon_mat", week: 1, day: "Monday", slot: 2, subject: "Maths", focus: "Number foundations: place value, decimals, negatives, factors, primes", teaching: "Calculations with 4 operations, prime factorization of 180 (2^2 * 3^2 * 5), negative number operations. Exit check without hints.", completed: false },
-    { id: "w1_mon_bio", week: 1, day: "Monday", slot: 3, subject: "Biology", focus: "Cells: animal/plant structures and functions", teaching: "Label nucleus, membrane, mitochondria, ribosomes, chloroplasts, vacuole, cell wall. Explain organelle functions with cause/effect sentences.", completed: false },
-    { id: "w1_mon_chm", week: 1, day: "Monday", slot: 4, subject: "Chemistry", focus: "Atoms, elements, compounds and mixtures", teaching: "Define central chemistry terms, conservation of mass, model particles and mixtures.", completed: false },
-
-    { id: "w1_tue_eng", week: 1, day: "Tuesday", slot: 1, subject: "English", focus: "Close reading and quotation analysis", teaching: "Model analysis: word -> connotation -> theme -> writer purpose. Anchor quote: 'Fair is foul, and foul is fair'.", completed: false },
-    { id: "w1_tue_mat", week: 1, day: "Tuesday", slot: 2, subject: "Maths", focus: "Factors and Multiples: HCF & LCM", teaching: "Find HCF of 60 and 90; LCM of 12 and 18. Ordering negative decimals.", completed: false },
-    { id: "w1_tue_phy", week: 1, day: "Tuesday", slot: 3, subject: "Physics", focus: "Energy stores and transfers", teaching: "Kinetic, gravitational, chemical, thermal stores. Identifying pathways and SI units.", completed: false },
-    { id: "w1_tue_art", week: 1, day: "Tuesday", slot: 4, subject: "Art", focus: "Objects & Identity: observation, line, shape, proportion", teaching: "Block largest shapes, compare proportions, observational drawing using graphite pencils.", completed: false },
-
-    { id: "w1_wed_eng", week: 1, day: "Wednesday", slot: 1, subject: "English", focus: "Apply: argument, theme and evidence", teaching: "Construct 2-paragraph argument answering how Shakespeare establishes disorder.", completed: false },
-    { id: "w1_wed_bio", week: 1, day: "Wednesday", slot: 2, subject: "Biology", focus: "Cell specialization & function application", teaching: "Written exam-style practice questions linking cell structures to their specific functions.", completed: false },
-    { id: "w1_wed_chm", week: 1, day: "Wednesday", slot: 3, subject: "Chemistry", focus: "Elements, compounds, chemical changes", teaching: "Application practice: distinguishing physical vs chemical separation methods.", completed: false },
-    { id: "w1_wed_psh", week: 1, day: "Wednesday", slot: 4, subject: "PSHE/RSE", focus: "Mental wellbeing: stress, sleep, movement, food, support", teaching: "4-step response scenario: Notice -> Choose safest action -> Name trusted source -> Adult intervention triggers.", completed: false },
-
-    { id: "w1_thu_eng", week: 1, day: "Thursday", slot: 1, subject: "English", focus: "GCSE writing and review", teaching: "AQA paragraph construction: thesis, precise evidence, AO2 method analysis.", completed: false },
-    { id: "w1_thu_mat", week: 1, day: "Thursday", slot: 2, subject: "Maths", focus: "Weekly Maths Check & Error Diagnosis", teaching: "6-question timed check. Diagnose errors: K (knowledge), M (method), C (careless), Q (misread).", completed: false },
-    { id: "w1_thu_phy", week: 1, day: "Thursday", slot: 3, subject: "Physics", focus: "Energy application practice", teaching: "Calculations on work done and conservation of energy in closed systems.", completed: false },
-    { id: "w1_thu_rev", week: 1, day: "Thursday", slot: 4, subject: "Weekly Review", focus: "Closed-book 10-question retrieval & catch-up", teaching: "Identify RED/AMBER topics across all subjects. Record exact gaps in Error Log.", completed: false },
-
-    // --- WEEKS 2 TO 36 LESSON INGESTION ---
-    ...generateRemainingLessons()
-  ]
-};
+// --- FUNCTION DEFINITIONS (Defined first to prevent initialization crashes) ---
 
 function generateRemainingLessons() {
   const generated = [];
@@ -112,35 +77,90 @@ function generateRemainingLessons() {
   return generated;
 }
 
+// --- DATA INITIALIZATION ---
+
+const INITIAL_CURRICULUM = {
+  subjects: [
+    { id: "eng", name: "GCSE English Literature & Language", description: "AQA 8702/8700 - Macbeth, Jekyll & Hyde, Animal Farm, Power & Conflict", weeks: 36 },
+    { id: "maths", name: "GCSE Mathematics Higher", description: "AQA Higher - Number, Algebra, Geometry, Probability, Statistics", weeks: 36 },
+    { id: "bio", name: "GCSE Biology", description: "Cells, Transport, Organisation, Infection, Bioenergetics, Homeostasis, Ecology", weeks: 36 },
+    { id: "chem", name: "GCSE Chemistry", description: "Atomic Structure, Bonding, Quantitative, Reactions, Rates, Organic", weeks: 36 },
+    { id: "phys", name: "GCSE Physics", description: "Energy, Electricity, Particle Model, Radiation, Waves, Space", weeks: 36 },
+    { id: "pshe", name: "PSHE & RSE", description: "Mental Health, Relationships, Safety, Finance, Careers, Becoming an Adult", weeks: 36 },
+    { id: "art", name: "Art & Design", description: "Portfolio Projects: Objects & Identity, Colour & Place, Portraiture, Mixed Media", weeks: 36 }
+  ],
+  lessons: [
+    { id: "w1_mon_eng", week: 1, day: "Monday", slot: 1, subject: "English", focus: "Macbeth foundations: Shakespeare, James I, Divine Right, Great Chain, witchcraft, tragedy, 'Fair is foul'", teaching: "0-7m: Retrieval (Divine Right, Regicide, Tragedy)\n7-18m: Reading Oxford School Shakespeare pp. 115-116, Act 1 Sc 1\n18-28m: Paradox, moral disorder, supernatural storm\n28-39m: 5-point event map + copy anchor quote: 'Fair is foul, and foul is fair'\n39-45m: Retell reading in 5 accurate points.", completed: false },
+    { id: "w1_mon_mat", week: 1, day: "Monday", slot: 2, subject: "Maths", focus: "Number foundations: place value, decimals, negatives, factors, primes", teaching: "Calculations with 4 operations, prime factorization of 180 (2^2 * 3^2 * 5), negative number operations. Exit check without hints.", completed: false },
+    { id: "w1_mon_bio", week: 1, day: "Monday", slot: 3, subject: "Biology", focus: "Cells: animal/plant structures and functions", teaching: "Label nucleus, membrane, mitochondria, ribosomes, chloroplasts, vacuole, cell wall. Explain organelle functions with cause/effect sentences.", completed: false },
+    { id: "w1_mon_chm", week: 1, day: "Monday", slot: 4, subject: "Chemistry", focus: "Atoms, elements, compounds and mixtures", teaching: "Define central chemistry terms, conservation of mass, model particles and mixtures.", completed: false },
+    { id: "w1_tue_eng", week: 1, day: "Tuesday", slot: 1, subject: "English", focus: "Close reading and quotation analysis", teaching: "Model analysis: word -> connotation -> theme -> writer purpose. Anchor quote: 'Fair is foul, and foul is fair'.", completed: false },
+    { id: "w1_tue_mat", week: 1, day: "Tuesday", slot: 2, subject: "Maths", focus: "Factors and Multiples: HCF & LCM", teaching: "Find HCF of 60 and 90; LCM of 12 and 18. Ordering negative decimals.", completed: false },
+    { id: "w1_tue_phy", week: 1, day: "Tuesday", slot: 3, subject: "Physics", focus: "Energy stores and transfers", teaching: "Kinetic, gravitational, chemical, thermal stores. Identifying pathways and SI units.", completed: false },
+    { id: "w1_tue_art", week: 1, day: "Tuesday", slot: 4, subject: "Art", focus: "Objects & Identity: observation, line, shape, proportion", teaching: "Block largest shapes, compare proportions, observational drawing using graphite pencils.", completed: false },
+    { id: "w1_wed_eng", week: 1, day: "Wednesday", slot: 1, subject: "English", focus: "Apply: argument, theme and evidence", teaching: "Construct 2-paragraph argument answering how Shakespeare establishes disorder.", completed: false },
+    { id: "w1_wed_bio", week: 1, day: "Wednesday", slot: 2, subject: "Biology", focus: "Cell specialization & function application", teaching: "Written exam-style practice questions linking cell structures to their specific functions.", completed: false },
+    { id: "w1_wed_chm", week: 1, day: "Wednesday", slot: 3, subject: "Chemistry", focus: "Elements, compounds, chemical changes", teaching: "Application practice: distinguishing physical vs chemical separation methods.", completed: false },
+    { id: "w1_wed_psh", week: 1, day: "Wednesday", slot: 4, subject: "PSHE/RSE", focus: "Mental wellbeing: stress, sleep, movement, food, support", teaching: "4-step response scenario: Notice -> Choose safest action -> Name trusted source -> Adult intervention triggers.", completed: false },
+    { id: "w1_thu_eng", week: 1, day: "Thursday", slot: 1, subject: "English", focus: "GCSE writing and review", teaching: "AQA paragraph construction: thesis, precise evidence, AO2 method analysis.", completed: false },
+    { id: "w1_thu_mat", week: 1, day: "Thursday", slot: 2, subject: "Maths", focus: "Weekly Maths Check & Error Diagnosis", teaching: "6-question timed check. Diagnose errors: K (knowledge), M (method), C (careless), Q (misread).", completed: false },
+    { id: "w1_thu_phy", week: 1, day: "Thursday", slot: 3, subject: "Physics", focus: "Energy application practice", teaching: "Calculations on work done and conservation of energy in closed systems.", completed: false },
+    { id: "w1_thu_rev", week: 1, day: "Thursday", slot: 4, subject: "Weekly Review", focus: "Closed-book 10-question retrieval & catch-up", teaching: "Identify RED/AMBER topics across all subjects. Record exact gaps in Error Log.", completed: false },
+    ...generateRemainingLessons()
+  ]
+};
+
 let appData = { curriculum: null, diary: {} };
 
+// --- CORE APP LIFECYCLE ---
+
 function initApp() {
-  const stored = localStorage.getItem("homeschool_gcse_tracker");
-  if (stored) {
-    try { appData = JSON.parse(stored); }
-    catch(e) { appData.curriculum = INITIAL_CURRICULUM; }
-  } else {
-    appData.curriculum = INITIAL_CURRICULUM;
+  console.log("Initializing GCSE Tracker...");
+  try {
+    const stored = localStorage.getItem("homeschool_gcse_tracker");
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (parsed && parsed.curriculum && Array.isArray(parsed.curriculum.lessons) && parsed.curriculum.lessons.length > 0) {
+        appData = parsed;
+      } else {
+        console.warn("Local storage missing required lessons. Re-seeding defaults.");
+        appData.curriculum = JSON.parse(JSON.stringify(INITIAL_CURRICULUM));
+        saveState();
+      }
+    } else {
+      appData.curriculum = JSON.parse(JSON.stringify(INITIAL_CURRICULUM));
+      saveState();
+    }
+  } catch (err) {
+    console.error("Corrupted local storage encountered. Resetting to defaults.", err);
+    appData.curriculum = JSON.parse(JSON.stringify(INITIAL_CURRICULUM));
     saveState();
   }
 
+  // Populate Week Select
   const weekSelect = document.getElementById("schedule-week-select");
-  weekSelect.innerHTML = "";
-  for (let i = 1; i <= 36; i++) {
-    const opt = document.createElement("option");
-    opt.value = i;
-    opt.textContent = `Week ${i}`;
-    weekSelect.appendChild(opt);
+  if (weekSelect) {
+    weekSelect.innerHTML = "";
+    for (let i = 1; i <= 36; i++) {
+      const opt = document.createElement("option");
+      opt.value = i;
+      opt.textContent = `Week ${i}`;
+      weekSelect.appendChild(opt);
+    }
+    weekSelect.value = 1;
   }
-  weekSelect.value = 1;
 
-  const today = new Date().toISOString().split("T")[0];
-  document.getElementById("diary-date-picker").value = today;
+  // Set initial diary picker date
+  const datePicker = document.getElementById("diary-date-picker");
+  if (datePicker && !datePicker.value) {
+    datePicker.value = new Date().toISOString().split("T")[0];
+  }
 
   renderSchedule();
   renderCurriculum();
   renderDiary();
   renderProgress();
+  console.log("GCSE Tracker initialized successfully.");
 }
 
 function saveState() {
@@ -149,8 +169,10 @@ function saveState() {
 }
 
 function resetToDefault() {
-  if (confirm("Reset curriculum back to default timetable and wipe custom edits?")) {
+  if (confirm("Reset curriculum back to default timetable and wipe custom changes?")) {
+    localStorage.removeItem("homeschool_gcse_tracker");
     appData.curriculum = JSON.parse(JSON.stringify(INITIAL_CURRICULUM));
+    appData.diary = {};
     saveState();
     location.reload();
   }
@@ -161,31 +183,48 @@ function exportData() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = "homeschool_gcse_tracker_backup.json";
+  a.download = "education42_gcse_backup.json";
   a.click();
 }
+
+// --- UI INTERACTIONS & TABS ---
 
 function switchTab(tabId) {
   document.querySelectorAll(".nav-btn").forEach(btn => btn.classList.remove("active"));
   document.querySelectorAll(".tab-pane").forEach(pane => pane.classList.remove("active"));
-  document.querySelector(`[onclick="switchTab('${tabId}')"]`).classList.add("active");
-  document.getElementById(`pane-${tabId}`).classList.add("active");
+
+  const targetBtn = document.querySelector(`[onclick="switchTab('${tabId}')"]`);
+  const targetPane = document.getElementById(`pane-${tabId}`);
+
+  if (targetBtn) targetBtn.classList.add("active");
+  if (targetPane) targetPane.classList.add("active");
+
   if (tabId === "progress") renderProgress();
   if (tabId === "diary") renderDiary();
 }
 
+// --- TIMETABLE RENDERING ---
+
 function renderSchedule() {
-  const weekNum = parseInt(document.getElementById("schedule-week-select").value);
+  const selectElem = document.getElementById("schedule-week-select");
+  if (!selectElem) return;
+
+  const weekNum = parseInt(selectElem.value, 10) || 1;
   const tbody = document.getElementById("schedule-grid-body");
+  if (!tbody) return;
   tbody.innerHTML = "";
 
   const termLabel = document.getElementById("schedule-term-label");
-  if (weekNum <= 12) termLabel.textContent = "(Autumn Term)";
-  else if (weekNum <= 24) termLabel.textContent = "(Spring Term)";
-  else termLabel.textContent = "(Summer Term)";
+  if (termLabel) {
+    if (weekNum <= 12) termLabel.textContent = "(Autumn Term)";
+    else if (weekNum <= 24) termLabel.textContent = "(Spring Term)";
+    else termLabel.textContent = "(Summer Term)";
+  }
 
   const days = ["Monday", "Tuesday", "Wednesday", "Thursday"];
-  const weekLessons = appData.curriculum.lessons.filter(l => l.week === weekNum);
+  const weekLessons = (appData.curriculum && appData.curriculum.lessons)
+    ? appData.curriculum.lessons.filter(l => l.week === weekNum)
+    : [];
 
   for (let slot = 1; slot <= 4; slot++) {
     const tr = document.createElement("tr");
@@ -216,6 +255,8 @@ function renderSchedule() {
     tbody.appendChild(tr);
   }
 }
+
+// --- MODAL / DETAIL VIEWS ---
 
 let activeLessonId = null;
 
@@ -262,14 +303,21 @@ function toggleLessonCompletion() {
   }
 }
 
+// --- DIARY LOGS ---
+
 function renderDiary() {
-  const date = document.getElementById("diary-date-picker").value;
+  const dateInput = document.getElementById("diary-date-picker");
+  if (!dateInput) return;
+  const date = dateInput.value;
   const entry = appData.diary[date] || { notes: "", extra: "" };
 
-  document.getElementById("diary-notes").value = entry.notes || "";
-  document.getElementById("diary-extra").value = entry.extra || "";
+  const notesInput = document.getElementById("diary-notes");
+  const extraInput = document.getElementById("diary-extra");
+  if (notesInput) notesInput.value = entry.notes || "";
+  if (extraInput) extraInput.value = entry.extra || "";
 
   const hist = document.getElementById("diary-history");
+  if (!hist) return;
   hist.innerHTML = "<h4 style='font-size:0.95rem; margin-bottom:8px;'>Past Entries</h4>";
   const dates = Object.keys(appData.diary).sort().reverse();
   if (dates.length === 0) {
@@ -286,8 +334,10 @@ function renderDiary() {
 }
 
 function saveDiaryEntry() {
-  const date = document.getElementById("diary-date-picker").value;
-  if (!date) return;
+  const dateInput = document.getElementById("diary-date-picker");
+  if (!dateInput || !dateInput.value) return;
+  const date = dateInput.value;
+
   const notes = document.getElementById("diary-notes").value;
   const extra = document.getElementById("diary-extra").value;
 
@@ -297,11 +347,14 @@ function saveDiaryEntry() {
   alert("Session logged.");
 }
 
+// --- METRICS & PROGRESS ---
+
 function renderProgress() {
   const container = document.getElementById("progress-summary");
+  if (!container || !appData.curriculum) return;
   container.innerHTML = "";
 
-  const allLessons = appData.curriculum.lessons;
+  const allLessons = appData.curriculum.lessons || [];
   const total = allLessons.length;
   const completed = allLessons.filter(l => l.completed).length;
   const pct = total === 0 ? 0 : Math.round((completed / total) * 100);
@@ -340,8 +393,11 @@ function renderProgress() {
   });
 }
 
+// --- CURRICULUM REGISTRY ---
+
 function renderCurriculum() {
   const list = document.getElementById("curriculum-list");
+  if (!list || !appData.curriculum) return;
   list.innerHTML = "";
 
   appData.curriculum.subjects.forEach(sub => {
@@ -360,4 +416,9 @@ function renderCurriculum() {
   });
 }
 
-window.addEventListener("DOMContentLoaded", initApp);
+// Ensure execution triggers safely whether DOM is ready or deferred
+if (document.readyState === "loading") {
+  window.addEventListener("DOMContentLoaded", initApp);
+} else {
+  initApp();
+}

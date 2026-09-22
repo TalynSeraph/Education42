@@ -360,4 +360,4 @@ function renderCurriculum() {
   });
 }
 
-window.addEventListener("DOMContentLoaded",
+window.addEventListener("DOMContentLoaded", initApp);
